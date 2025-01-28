@@ -151,7 +151,8 @@ This can be :tab, :space, or nil (do nothing)."
       "export" "group" "import" "library" "map" "module" "org" "osabi" "safeseh" "uppercase"
       "prefix" "suffix" "gprefix" "gsuffix" "lprefix" "lsuffix" "limit"
       "options"
-      "subsections_via_symbols" "no_dead_strip" "maxdump" "nodepend" "noseclabels")
+      "subsections_via_symbols" "no_dead_strip" "maxdump" "nodepend" "noseclabels"
+      "struc" "endstruc" "istruc" "iend" "at" "align" "alignb")
     "NASM directives (asm/directiv.dat) for `nasm-mode'."))
 
 (eval-and-compile
@@ -540,7 +541,6 @@ This can be :tab, :space, or nil (do nothing)."
       "@arg" "@elif" "@else" "@endif" "@if" "@ifdef" "@ifdifi" "@ifndef" "@include" "@local"
       "%if" "%ifn" "%ifctx" "%ifnctx" "%ifdef" "%ifndef" "%ifempty" "%ifnempty" "%ifenv" "%ifnenv" "%ifid" "%ifnid" "%ifidn" "%ifnidn" "%ifidni" "%ifnidni" "%ifmacro" "%ifnmacro" "%ifnum" "%ifnnum" "%ifstr" "%ifnstr" "%iftoken" "%ifntoken"
       "%elif" "%elifn" "%elifctx" "%elifnctx" "%elifdef" "%elifndef" "%elifempty" "%elifnempty" "%elifenv" "%elifnenv" "%elifid" "%elifnid" "%elifidn" "%elifnidn" "%elifidni" "%elifnidni" "%elifmacro" "%elifnmacro" "%elifnum" "%elifnnum" "%elifstr" "%elifnstr" "%eliftoken" "%elifntoken"
-      "struc" "endstruc" "istruc" "iend" "at" "align" "alignb"
       "__?FILE?__" "__?LINE?__"
       "__?NASM_MAJOR?__" " __?NASM_MINOR?__" "__?NASM_SUBMINOR?__" "___?NASM_PATCHLEVEL?__" "__?NASM_VERSION_ID?__" "__?NASM_VER?__"
       "__?BITS?__" "__?OUTPUT_FORMAT?__" "__?DEBUG_FORMAT?__"
