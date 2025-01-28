@@ -2,9 +2,9 @@
 
 ;; This is free and unencumbered software released into the public domain.
 
-;; Author: Christopher Wellons <wellons@nullprogram.com>
-;; URL: https://github.com/skeeto/nasm-mode
-;; Version: 1.1.1
+;; Author: Gabriel Frigo <gabriel.frigo4@gmail.com>
+;; URL: https://github.com/GabrielFrigo4/nasm-mode
+;; Version: 1.0.0
 ;; Package-Requires: ((emacs "24.3"))
 
 ;;; Commentary:
@@ -21,10 +21,13 @@
 ;; otherwise ambiguous between macros and labels. This covers both
 ;; indentation and imenu support.
 
-;; The keyword lists are up to date as of NASM 2.12.01.
+;; The keyword lists are up to date as of NASM 2.16.03.
 ;; http://www.nasm.us/doc/nasmdocb.html
 
-;; TODO:
+;; TODO Improve:
+;; [ ] nasm-instructions (https://github.com/netwide-assembler/nasm/blob/master/x86/insns.dat)
+
+;; TODO Fix:
 ;; [ ] Line continuation awareness
 ;; [x] Don't run comment command if type ';' inside a string
 ;; [ ] Nice multi-; comments, like in asm-mode
@@ -73,6 +76,11 @@ This can be :tab, :space, or nil (do nothing)."
   "Face for types."
   :group 'nasm-mode-faces)
 
+(defface nasm-functions
+  '((t :inherit (font-lock-type-face)))
+  "Face for functions."
+  :group 'nasm-mode-faces)
+
 (defface nasm-instructions
   '((t :inherit (font-lock-builtin-face)))
   "Face for instructions."
@@ -110,41 +118,41 @@ This can be :tab, :space, or nil (do nothing)."
 
 (eval-and-compile
   (defconst nasm-registers
-    '("ah" "al" "ax" "bh" "bl" "bnd0" "bnd1" "bnd2" "bnd3" "bp" "bpl"
-      "bx" "ch" "cl" "cr0" "cr1" "cr10" "cr11" "cr12" "cr13" "cr14"
-      "cr15" "cr2" "cr3" "cr4" "cr5" "cr6" "cr7" "cr8" "cr9" "cs" "cx"
-      "dh" "di" "dil" "dl" "dr0" "dr1" "dr10" "dr11" "dr12" "dr13"
-      "dr14" "dr15" "dr2" "dr3" "dr4" "dr5" "dr6" "dr7" "dr8" "dr9" "ds"
-      "dx" "eax" "ebp" "ebx" "ecx" "edi" "edx" "es" "esi" "esp" "fs"
-      "gs" "k0" "k1" "k2" "k3" "k4" "k5" "k6" "k7" "mm0" "mm1" "mm2"
-      "mm3" "mm4" "mm5" "mm6" "mm7" "r10" "r10b" "r10d" "r10w" "r11"
-      "r11b" "r11d" "r11w" "r12" "r12b" "r12d" "r12w" "r13" "r13b"
-      "r13d" "r13w" "r14" "r14b" "r14d" "r14w" "r15" "r15b" "r15d"
-      "r15w" "r8" "r8b" "r8d" "r8w" "r9" "r9b" "r9d" "r9w" "rax" "rbp"
-      "rbx" "rcx" "rdi" "rdx" "rsi" "rsp" "segr6" "segr7" "si" "sil"
-      "sp" "spl" "ss" "st0" "st1" "st2" "st3" "st4" "st5" "st6" "st7"
-      "tr0" "tr1" "tr2" "tr3" "tr4" "tr5" "tr6" "tr7" "xmm0" "xmm1"
-      "xmm10" "xmm11" "xmm12" "xmm13" "xmm14" "xmm15" "xmm16" "xmm17"
-      "xmm18" "xmm19" "xmm2" "xmm20" "xmm21" "xmm22" "xmm23" "xmm24"
-      "xmm25" "xmm26" "xmm27" "xmm28" "xmm29" "xmm3" "xmm30" "xmm31"
-      "xmm4" "xmm5" "xmm6" "xmm7" "xmm8" "xmm9" "ymm0" "ymm1" "ymm10"
-      "ymm11" "ymm12" "ymm13" "ymm14" "ymm15" "ymm16" "ymm17" "ymm18"
-      "ymm19" "ymm2" "ymm20" "ymm21" "ymm22" "ymm23" "ymm24" "ymm25"
-      "ymm26" "ymm27" "ymm28" "ymm29" "ymm3" "ymm30" "ymm31" "ymm4"
-      "ymm5" "ymm6" "ymm7" "ymm8" "ymm9" "zmm0" "zmm1" "zmm10" "zmm11"
-      "zmm12" "zmm13" "zmm14" "zmm15" "zmm16" "zmm17" "zmm18" "zmm19"
-      "zmm2" "zmm20" "zmm21" "zmm22" "zmm23" "zmm24" "zmm25" "zmm26"
-      "zmm27" "zmm28" "zmm29" "zmm3" "zmm30" "zmm31" "zmm4" "zmm5"
-      "zmm6" "zmm7" "zmm8" "zmm9")
-    "NASM registers (reg.c) for `nasm-mode'."))
+    '("al" "ah" "ax" "eax" "rax"
+      "bl" "bh" "bx" "ebx" "rbx"
+      "cl" "ch" "cx" "ecx" "rcx"
+      "dl" "dh" "dx" "edx" "rdx"
+      "spl" "sp" "esp" "rsp"
+      "bpl" "bp" "ebp" "rbp"
+      "sil" "si" "esi" "rsi"
+      "dil" "di" "edi" "rdi"
+      "r8b" "r9b" "r10b" "r11b" "r12b" "r13b" "r14b" "r15b"
+      "r8w" "r9w" "r10w" "r11w" "r12w" "r13w" "r14w" "r15w"
+      "r8d" "r9d" "r10d" "r11d" "r12d" "r13d" "r14d" "r15d"
+      "r8" "r9" "r10" "r11" "r12" "r13" "r14" "r15"
+      "es" "cs" "ss" "ds" "fs" "gs"
+      "segr6" "segr7"
+      "cr0" "cr1" "cr2" "cr3" "cr4" "cr5" "cr6" "cr7" "cr8" "cr9" "cr10" "cr11" "cr12" "cr13" "cr14" "cr15"
+      "dr0" "dr1" "dr2" "dr3" "dr4" "dr5" "dr6" "dr7" "dr8" "dr9" "dr10" "dr11" "dr12" "dr13" "dr14" "dr15"
+      "tr0" "tr1" "tr2" "tr3" "tr4" "tr5" "tr6" "tr7"
+      "st0" "st1" "st2" "st3" "st4" "st5" "st6" "st7"
+      "mm0" "mm1" "mm2" "mm3" "mm4" "mm5" "mm6" "mm7"
+      "xmm0" "xmm1" "xmm2" "xmm3" "xmm4" "xmm5" "xmm6" "xmm7" "xmm8" "xmm9" "xmm10" "xmm11" "xmm12" "xmm13" "xmm14" "xmm15" "xmm16" "xmm17" "xmm18" "xmm19" "xmm20" "xmm21" "xmm22" "xmm23" "xmm24" "xmm25" "xmm26" "xmm27" "xmm28" "xmm29" "xmm30" "xmm31"
+      "ymm0" "ymm1" "ymm2" "ymm3" "ymm4" "ymm5" "ymm6" "ymm7" "ymm8" "ymm9" "ymm10" "ymm11" "ymm12" "ymm13" "ymm14" "ymm15" "ymm16" "ymm17" "ymm18" "ymm19" "ymm20" "ymm21" "ymm22" "ymm23" "ymm24" "ymm25" "ymm26" "ymm27" "ymm28" "ymm29" "ymm30" "ymm31"
+      "zmm0" "zmm1" "zmm2" "zmm3" "zmm4" "zmm5" "zmm6" "zmm7" "zmm8" "zmm9" "zmm10" "zmm11" "zmm12" "zmm13" "zmm14" "zmm15" "zmm16" "zmm17" "zmm18" "zmm19" "zmm20" "zmm21" "zmm22" "zmm23" "zmm24" "zmm25" "zmm26" "zmm27" "zmm28" "zmm29" "zmm30" "zmm31"
+      "tmm0" "tmm1" "tmm2" "tmm3" "tmm4" "tmm5" "tmm6" "tmm7"
+      "k0" "k1" "k2" "k3" "k4" "k5" "k6" "k7"
+      "bnd0" "bnd1" "bnd2" "bnd3")
+    "NASM registers (x86/regs.dat) for `nasm-mode'."))
 
 (eval-and-compile
   (defconst nasm-directives
-    '("absolute" "bits" "common" "cpu" "debug" "default" "extern"
-      "float" "global" "list" "section" "segment" "warning" "sectalign"
-      "export" "group" "import" "library" "map" "module" "org" "osabi"
-      "safeseh" "uppercase")
-    "NASM directives (directiv.c) for `nasm-mode'."))
+    '("absolute" "bits" "common" "cpu" "debug" "default" "extern" "float" "global" "static" "list" "section" "segment" "warning" "sectalign" "pragma" "required"
+      "export" "group" "import" "library" "map" "module" "org" "osabi" "safeseh" "uppercase"
+      "prefix" "suffix" "gprefix" "gsuffix" "lprefix" "lsuffix" "limit"
+      "options"
+      "subsections_via_symbols" "no_dead_strip" "maxdump" "nodepend" "noseclabels")
+    "NASM directives (asm/directiv.dat) for `nasm-mode'."))
 
 (eval-and-compile
   (defconst nasm-instructions
@@ -488,51 +496,57 @@ This can be :tab, :space, or nil (do nothing)."
       "xrstor" "xrstor64" "xrstors" "xrstors64" "xsave" "xsave64"
       "xsavec" "xsavec64" "xsaveopt" "xsaveopt64" "xsaves" "xsaves64"
       "xsetbv" "xsha1" "xsha256" "xstore" "xtest")
-    "NASM instructions (tokhash.c) for `nasm-mode'."))
+    "NASM instructions (x86/insns.dat) for `nasm-mode'."))
 
 (eval-and-compile
   (defconst nasm-types
-    '("1to16" "1to2" "1to4" "1to8" "__float128h__" "__float128l__"
-      "__float16__" "__float32__" "__float64__" "__float80e__"
-      "__float80m__" "__float8__" "__infinity__" "__nan__" "__qnan__"
-      "__snan__" "__utf16__" "__utf16be__" "__utf16le__" "__utf32__"
-      "__utf32be__" "__utf32le__" "abs" "byte" "dword" "evex" "far"
-      "long" "near" "nosplit" "oword" "qword" "rel" "seg" "short"
-      "strict" "to" "tword" "vex2" "vex3" "word" "wrt" "yword"
-      "zword")
-    "NASM types (tokens.dat) for `nasm-mode'."))
+    '("byte" "word" "dword" "qword" "tword" "oword" "yword" "zword"
+      "abs" "far" "long" "near" "nosplit" "rel" "short" "strict" "to"
+      "ptr"
+      "dup"
+      "__?nan?__" "__?infinity?__" "__?qnan?__" "__?snan?__"
+      "__?float8?__" "__?float16?__" "__?float32?__" "__?float64?__" "__?float80m?__" "__?float80e?__" "__?float128l?__" "__?float128h?__"
+      "__?bfloat16?__"
+      "__?utf16?__" "__?utf16le?__" "__?utf16be?__" "__?utf32?__" "__?utf32le?__" "__?utf32be?__"
+      "seg" "wrt"
+      "__?masm_ptr?__" "__?masm_flat?__"
+      "1to2" "1to4" "1to8" "1to16" "1to32"
+      "rn-sae" "rd-sae" "ru-sae" "rz-sae"
+      "sae" "z")
+    "NASM types (asm/tokens.dat) for `nasm-mode'."))
+
+(eval-and-compile
+  (defconst nasm-functions
+    '("__?ilog2e?__" "__?ilog2w?__" "__?ilog2f?__" "__?ilog2c?__")
+    "NASM functions (asm/tokens.dat) for `nasm-mode'."))
 
 (eval-and-compile
   (defconst nasm-prefix
-    '("a16" "a32" "a64" "asp" "lock" "o16" "o32" "o64" "osp" "rep" "repe"
-      "repne" "repnz" "repz" "times" "wait" "xacquire" "xrelease" "bnd")
-    "NASM prefixes (nasmlib.c) for `nasm-mode'."))
+    '("a16" "a32" "a64" "asp"
+      "lock"
+      "o16" "o32" "o64" "osp"
+      "rep" "repe" "repne" "repnz" "repz" "xacquire" "xrelease" "bnd" "nobnd"
+      "times"
+      "wait"
+      "rex" "evex" "vex" "vex2" "vex3")
+    "NASM prefixes (asm/tokens.dat) for `nasm-mode'."))
 
 (eval-and-compile
   (defconst nasm-pp-directives
-    '("%elif" "%elifn" "%elifctx" "%elifnctx" "%elifdef" "%elifndef"
-      "%elifempty" "%elifnempty" "%elifenv" "%elifnenv" "%elifid"
-      "%elifnid" "%elifidn" "%elifnidn" "%elifidni" "%elifnidni"
-      "%elifmacro" "%elifnmacro" "%elifnum" "%elifnnum" "%elifstr"
-      "%elifnstr" "%eliftoken" "%elifntoken" "%if" "%ifn" "%ifctx"
-      "%ifnctx" "%ifdef" "%ifndef" "%ifempty" "%ifnempty" "%ifenv"
-      "%ifnenv" "%ifid" "%ifnid" "%ifidn" "%ifnidn" "%ifidni" "%ifnidni"
-      "%ifmacro" "%ifnmacro" "%ifnum" "%ifnnum" "%ifstr" "%ifnstr"
-      "%iftoken" "%ifntoken" "%arg" "%assign" "%clear" "%define"
-      "%defstr" "%deftok" "%depend" "%else" "%endif" "%endm" "%endmacro"
-      "%endrep" "%error" "%exitmacro" "%exitrep" "%fatal" "%iassign"
-      "%idefine" "%idefstr" "%ideftok" "%imacro" "%include" "%irmacro"
-      "%ixdefine" "%line" "%local" "%macro" "%pathsearch" "%pop" "%push"
-      "%rep" "%repl" "%rmacro" "%rotate" "%stacksize" "%strcat"
-      "%strlen" "%substr" "%undef" "%unimacro" "%unmacro" "%use"
-      "%warning" "%xdefine" "istruc" "at" "iend" "align" "alignb"
-      "struc" "endstruc" "__LINE__" "__FILE__" "%comment" "%endcomment"
-      "__NASM_MAJOR__" " __NASM_MINOR__" "__NASM_SUBMINOR__"
-      "___NASM_PATCHLEVEL__" "__NASM_VERSION_ID__" "__NASM_VER__"
-      "__BITS__" "__OUTPUT_FORMAT__" "__DATE__" "__TIME__" "__DATE_NUM__"
-      "__TIME_NUM__" "__UTC_DATE__" "__UTC_TIME__" "__UTC_DATE_NUM__"
-      "__UTC_TIME_NUM__" "__POSIX_TIME__" " __PASS__" "SECTALIGN")
-    "NASM preprocessor directives (pptok.c) for `nasm-mode'."))
+    '("%if*" "%elif*"
+      "*" "*ctx" "*def" "*defalias" "*difi" "*empty" "*env" "*id" "*idn" "*idni" "*macro" "*num" "*str" "*token" "*usable" "*using"
+      "%!assign" "%!defalias" "%!define" "%!defstr" "%!deftok" "%!macro" "%!pathsearch" "%!rmacro" "%!strcat" "%!strlen" "%!substr" "%!xdefine" "%un!macro"
+      "%aliases"  "%arg"  "%clear"  "%depend" "%else"  "%endif"  "%endm" "%endmacro"  "%endrep" "%error" "%exitmacro" "%exitrep" "%fatal" "%include" "%line"  "%local"  "%null" "%note"  "%pop"  "%pragma" "%push"  "%rep"  "%repl" "%require" "%rotate"  "%stacksize"  "%undef"  "%undefalias" "%use" "%warning"
+      "@arg" "@elif" "@else" "@endif" "@if" "@ifdef" "@ifdifi" "@ifndef" "@include" "@local"
+      "%if" "%ifn" "%ifctx" "%ifnctx" "%ifdef" "%ifndef" "%ifempty" "%ifnempty" "%ifenv" "%ifnenv" "%ifid" "%ifnid" "%ifidn" "%ifnidn" "%ifidni" "%ifnidni" "%ifmacro" "%ifnmacro" "%ifnum" "%ifnnum" "%ifstr" "%ifnstr" "%iftoken" "%ifntoken"
+      "%elif" "%elifn" "%elifctx" "%elifnctx" "%elifdef" "%elifndef" "%elifempty" "%elifnempty" "%elifenv" "%elifnenv" "%elifid" "%elifnid" "%elifidn" "%elifnidn" "%elifidni" "%elifnidni" "%elifmacro" "%elifnmacro" "%elifnum" "%elifnnum" "%elifstr" "%elifnstr" "%eliftoken" "%elifntoken"
+      "struc" "endstruc" "istruc" "iend" "at" "align" "alignb"
+      "__?FILE?__" "__?LINE?__"
+      "__?NASM_MAJOR?__" " __?NASM_MINOR?__" "__?NASM_SUBMINOR?__" "___?NASM_PATCHLEVEL?__" "__?NASM_VERSION_ID?__" "__?NASM_VER?__"
+      "__?BITS?__" "__?OUTPUT_FORMAT?__" "__?DEBUG_FORMAT?__"
+      "__?DATE?__" "__?TIME?__" "__?DATE_NUM?__" "__?TIME_NUM?__" "__?UTC_DATE?__" "__?UTC_TIME?__" "__?UTC_DATE_NUM?__" "__?UTC_TIME_NUM?__" "__?POSIX_TIME?__"
+      " __?PASS?__" "SECTALIGN")
+    "NASM preprocessor directives (asm/pptok.dat) for `nasm-mode'."))
 
 (defconst nasm-nonlocal-label-rexexp
   "\\(\\_<[a-zA-Z_?][a-zA-Z0-9_$#@~?]*\\_>\\)\\s-*:"
@@ -578,6 +592,7 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
     (,(nasm--opt nasm-registers) . 'nasm-registers)
     (,(nasm--opt nasm-prefix) . 'nasm-prefix)
     (,(nasm--opt nasm-types) . 'nasm-types)
+    (,(nasm--opt nasm-functions) . 'nasm-functions)
     (,(nasm--opt nasm-instructions) . 'nasm-instructions)
     (,(nasm--opt nasm-pp-directives) . 'nasm-preprocessor)
     (,(concat "^\\s-*" nasm-nonlocal-label-rexexp) (1 'nasm-labels))
