@@ -145,12 +145,13 @@ This can be :tab, :space, or nil (do nothing)."
 
 (eval-and-compile
   (defconst nasm-directives
-    '("absolute" "bits" "common" "cpu" "debug" "default" "extern" "float" "global" "static" "list" "section" "segment" "warning" "sectalign" "pragma" "required"
+    '("absolute" "bits" "use16" "use32" "common" "cpu" "debug" "default" "extern" "float" "global" "static" "list" "section" "segment" "warning" "sectalign" "pragma" "required"
       "export" "group" "import" "library" "map" "module" "org" "osabi" "safeseh" "uppercase"
       "prefix" "suffix" "gprefix" "gsuffix" "lprefix" "lsuffix" "limit"
       "options"
       "subsections_via_symbols" "no_dead_strip" "maxdump" "nodepend" "noseclabels"
-      "struc" "endstruc" "istruc" "iend" "at" "align" "alignb")
+      "struc" "endstruc" "istruc" "iend" "at" "align" "alignb"
+      "!" "!=" "<=" "<=>" ">=" "=" "==" "<" "<<" "<<<" "<>" ">" ">>" ">>>" "$" "$$")
     "NASM directives (asm/directiv.dat) for `nasm-mode'."))
 
 (eval-and-compile
@@ -277,7 +278,7 @@ This can be :tab, :space, or nil (do nothing)."
       "VADDPH" "VADDSH" "VCMPPH" "VCMPSH" "VCOMISH" "VCVTDQ2PH" "VCVTPD2PH" "VCVTPH2DQ" "VCVTPH2PD" "VCVTPH2PSX" "VCVTPH2QQ" "VCVTPH2UDQ" "VCVTPH2UQQ" "VCVTPH2UW" "VCVTPH2W" "VCVTQQ2PH" "VCVTSD2SH" "VCVTSH2SD" "VCVTSH2SI" "VCVTSH2SS" "VCVTSH2USI" "VCVTSI2SH" "VCVTSS2SH" "VCVTTPH2DQ" "VCVTTPH2QQ" "VCVTTPH2UDQ" "VCVTTPH2UQQ" "VCVTTPH2UW" "VCVTTPH2W" "VCVTTSH2SI" "VCVTTSH2USI" "VCVTUDQ2PH" "VCVTUQQ2PH" "VCVTUSI2SH" "VCVTUW2PH" "VCVTW2PH" "VDIVPH" "VDIVSH" "VFCMADDCPH" "VFMADDCPH" "VFCMADDCSH" "VFMADDCSH" "VFCMULCPCH" "VFMULCPCH" "VFCMULCSH" "VFMULCSH" "VFMADDSUB132PH" "VFMADDSUB213PH" "VFMADDSUB231PH" "VFMSUBADD132PH" "VFMSUBADD213PH" "VFMSUBADD231PH" "VPMADD132PH" "VPMADD213PH" "VPMADD231PH" "VFMADD132PH" "VFMADD213PH" "VFMADD231PH" "VPMADD132SH" "VPMADD213SH" "VPMADD231SH" "VPNMADD132SH" "VPNMADD213SH" "VPNMADD231SH" "VPMSUB132PH" "VPMSUB213PH" "VPMSUB231PH" "VFMSUB132PH" "VFMSUB213PH" "VFMSUB231PH" "VPMSUB132SH" "VPMSUB213SH" "VPMSUB231SH" "VPNMSUB132SH" "VPNMSUB213SH" "VPNMSUB231SH" "VFPCLASSPH" "VFPCLASSSH" "VGETEXPPH" "VGETEXPSH" "VGETMANTPH" "VGETMANTSH" "VGETMAXPH" "VGETMAXSH" "VGETMINPH" "VGETMINSH" "VMOVSH" "VMOVW" "VMULPH" "VMULSH" "VRCPPH" "VRCPSH" "VREDUCEPH" "VREDUCESH" "VENDSCALEPH" "VENDSCALESH" "VRSQRTPH" "VRSQRTSH" "VSCALEFPH" "VSCALEFSH" "VSQRTPH" "VSQRTSH" "VSUBPH" "VSUBSH" "VUCOMISH"
       "AADD" "AAND" "AXOR"
       "CLUI" "SENDUIPI" "STUI" "TESTUI" "UIRET"
-      "CMPccXADD"
+      "CMPBEXADD" "CMPBEXADD" "CMPBEXADD" "CMPBXADD" "CMPBXADD" "CMPBXADD" "CMPLEXADD" "CMPLEXADD" "CMPLEXADD" "CMPLXADD" "CMPLXADD" "CMPLXADD" "CMPNBEXADD" "CMPNBEXADD" "CMPNBEXADD" "CMPNBXADD" "CMPNBXADD" "CMPNBXADD" "CMPNLEXADD" "CMPNLEXADD" "CMPNLEXADD" "CMPNLXADD" "CMPNLXADD" "CMPNLXADD" "CMPNOXADD" "CMPNOXADD" "CMPNPXADD" "CMPNPXADD" "CMPNSXADD" "CMPNSXADD" "CMPNZXADD" "CMPNZXADD" "CMPOXADD" "CMPOXADD" "CMPPXADD" "CMPPXADD" "CMPSXADD" "CMPSXADD" "CMPZXADD" "CMPZXADD"
       "ERETS" "ERETU" "LKGS"
       "WRMSRNS" "RDMSRLIST" "WRMSRLIST"
       "HRESET"
@@ -287,7 +288,7 @@ This can be :tab, :space, or nil (do nothing)."
 (eval-and-compile
   (defconst nasm-types
     '("byte" "word" "dword" "qword" "tword" "oword" "yword" "zword"
-      "abs" "far" "long" "near" "nosplit" "rel" "short" "strict" "to"
+      "far" "long" "near" "nosplit" "rel" "abs" "short" "strict" "to"
       "ptr"
       "dup"
       "__?nan?__" "__?infinity?__" "__?qnan?__" "__?snan?__"
