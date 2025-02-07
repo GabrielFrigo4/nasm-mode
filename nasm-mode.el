@@ -11,7 +11,7 @@
 
 ;; A major mode for editing NASM x86 assembly programs. It includes
 ;; syntax highlighting, automatic indentation, and imenu integration.
-;; Unlike Emacs' generic `asm-mode`, it understands NASM-specific
+;; Unlike Emacs generic `asm-mode`, it understands NASM-specific
 ;; syntax.
 
 ;; NASM Home: http://www.nasm.us
@@ -41,20 +41,20 @@
 (require 'imenu)
 
 (defgroup nasm-mode ()
-  "Options for `nasm-mode'."
+  "Options for `nasm-mode`."
   :group 'languages)
 
 (defgroup nasm-mode-faces ()
-  "Faces used by `nasm-mode'."
+  "Faces used by `nasm-mode`."
   :group 'nasm-mode)
 
 (defcustom nasm-basic-offset (default-value 'tab-width)
-  "Indentation level for `nasm-mode'."
+  "Indentation level for `nasm-mode`."
   :type 'integer
   :group 'nasm-mode)
 
 (defcustom nasm-after-mnemonic-whitespace :tab
-  "In `nasm-mode', determines the whitespace to use after mnemonics.
+  "In `nasm-mode`, determines the whitespace to use after mnemonics.
 This can be :tab, :space, or nil (do nothing)."
   :type '(choice (const :tab) (const :space) (const nil))
   :group 'nasm-mode)
@@ -141,7 +141,7 @@ This can be :tab, :space, or nil (do nothing)."
       "tmm0" "tmm1" "tmm2" "tmm3" "tmm4" "tmm5" "tmm6" "tmm7"
       "k0" "k1" "k2" "k3" "k4" "k5" "k6" "k7"
       "bnd0" "bnd1" "bnd2" "bnd3")
-    "NASM registers (x86/regs.dat) for `nasm-mode'."))
+    "NASM registers (x86/regs.dat) for `nasm-mode`."))
 
 (eval-and-compile
   (defconst nasm-directives
@@ -152,7 +152,7 @@ This can be :tab, :space, or nil (do nothing)."
       "subsections_via_symbols" "no_dead_strip" "maxdump" "nodepend" "noseclabels"
       "struc" "endstruc" "istruc" "iend" "at" "align" "alignb"
       "!" "!=" "<=" "<=>" ">=" "=" "==" "<" "<<" "<<<" "<>" ">" ">>" ">>>" "$" "$$")
-    "NASM directives (asm/directiv.dat) for `nasm-mode'."))
+    "NASM directives (asm/directiv.dat) for `nasm-mode`."))
 
 (eval-and-compile
   (defconst nasm-instructions
@@ -283,7 +283,7 @@ This can be :tab, :space, or nil (do nothing)."
       "WRMSRNS" "RDMSRLIST" "WRMSRLIST"
       "HRESET"
       "HINT_NOP0" "HINT_NOP1" "HINT_NOP2" "HINT_NOP3" "HINT_NOP4" "HINT_NOP5" "HINT_NOP6" "HINT_NOP7" "HINT_NOP8" "HINT_NOP9" "HINT_NOP10" "HINT_NOP11" "HINT_NOP12" "HINT_NOP13" "HINT_NOP14" "HINT_NOP15" "HINT_NOP16" "HINT_NOP17" "HINT_NOP18" "HINT_NOP19" "HINT_NOP20" "HINT_NOP21" "HINT_NOP22" "HINT_NOP23" "HINT_NOP24" "HINT_NOP25" "HINT_NOP26" "HINT_NOP27" "HINT_NOP28" "HINT_NOP29" "HINT_NOP30" "HINT_NOP31" "HINT_NOP32" "HINT_NOP33" "HINT_NOP34" "HINT_NOP35" "HINT_NOP36" "HINT_NOP37" "HINT_NOP38" "HINT_NOP39" "HINT_NOP40" "HINT_NOP41" "HINT_NOP42" "HINT_NOP43" "HINT_NOP44" "HINT_NOP45" "HINT_NOP46" "HINT_NOP47" "HINT_NOP48" "HINT_NOP49" "HINT_NOP50" "HINT_NOP51" "HINT_NOP52" "HINT_NOP53" "HINT_NOP54" "HINT_NOP55" "HINT_NOP56" "HINT_NOP57" "HINT_NOP58" "HINT_NOP59" "HINT_NOP60" "HINT_NOP61" "HINT_NOP62" "HINT_NOP63")
-    "NASM instructions (x86/insns.dat) for `nasm-mode'."))
+    "NASM instructions (x86/insns.dat) for `nasm-mode`."))
 
 (eval-and-compile
   (defconst nasm-types
@@ -300,12 +300,12 @@ This can be :tab, :space, or nil (do nothing)."
       "1to2" "1to4" "1to8" "1to16" "1to32"
       "rn-sae" "rd-sae" "ru-sae" "rz-sae"
       "sae" "z")
-    "NASM types (asm/tokens.dat) for `nasm-mode'."))
+    "NASM types (asm/tokens.dat) for `nasm-mode`."))
 
 (eval-and-compile
   (defconst nasm-functions
     '("__?ilog2e?__" "__?ilog2w?__" "__?ilog2f?__" "__?ilog2c?__")
-    "NASM functions (asm/tokens.dat) for `nasm-mode'."))
+    "NASM functions (asm/tokens.dat) for `nasm-mode`."))
 
 (eval-and-compile
   (defconst nasm-prefix
@@ -316,7 +316,7 @@ This can be :tab, :space, or nil (do nothing)."
       "times"
       "wait"
       "rex" "evex" "vex" "vex2" "vex3")
-    "NASM prefixes (asm/tokens.dat) for `nasm-mode'."))
+    "NASM prefixes (asm/tokens.dat) for `nasm-mode`."))
 
 (eval-and-compile
   (defconst nasm-pp-directives
@@ -332,30 +332,30 @@ This can be :tab, :space, or nil (do nothing)."
       "__?BITS?__" "__?OUTPUT_FORMAT?__" "__?DEBUG_FORMAT?__"
       "__?DATE?__" "__?TIME?__" "__?DATE_NUM?__" "__?TIME_NUM?__" "__?UTC_DATE?__" "__?UTC_TIME?__" "__?UTC_DATE_NUM?__" "__?UTC_TIME_NUM?__" "__?POSIX_TIME?__"
       " __?PASS?__" "SECTALIGN")
-    "NASM preprocessor directives (asm/pptok.dat) for `nasm-mode'."))
+    "NASM preprocessor directives (asm/pptok.dat) for `nasm-mode`."))
 
 (defconst nasm-nonlocal-label-rexexp
   "\\(\\_<[a-zA-Z_?][a-zA-Z0-9_$#@~?]*\\_>\\)\\s-*:"
-  "Regexp for `nasm-mode' for matching nonlocal labels.")
+  "Regexp for `nasm-mode` for matching nonlocal labels.")
 
 (defconst nasm-local-label-regexp
   "\\(\\_<\\.[a-zA-Z_?][a-zA-Z0-9_$#@~?]*\\_>\\)\\(?:\\s-*:\\)?"
-  "Regexp for `nasm-mode' for matching local labels.")
+  "Regexp for `nasm-mode` for matching local labels.")
 
 (defconst nasm-label-regexp
   (concat nasm-nonlocal-label-rexexp "\\|" nasm-local-label-regexp)
-  "Regexp for `nasm-mode' for matching labels.")
+  "Regexp for `nasm-mode` for matching labels.")
 
 (defconst nasm-constant-regexp
   "\\_<$?[-+]?[0-9][-+_0-9A-Fa-fHhXxDdTtQqOoBbYyeE.]*\\_>"
-  "Regexp for `nasm-mode' for matching numeric constants.")
+  "Regexp for `nasm-mode` for matching numeric constants.")
 
 (defconst nasm-section-name-regexp
   "^\\s-*section[ \t]+\\(\\_<\\.[a-zA-Z0-9_$#@~.?]+\\_>\\)"
-  "Regexp for `nasm-mode' for matching section names.")
+  "Regexp for `nasm-mode` for matching section names.")
 
 (defmacro nasm--opt (keywords)
-  "Prepare KEYWORDS for `looking-at'."
+  "Prepare KEYWORDS for `looking-at`."
   `(eval-when-compile
      (regexp-opt ,keywords 'symbols)))
 
@@ -363,14 +363,14 @@ This can be :tab, :space, or nil (do nothing)."
   `((nil ,(concat "^\\s-*" nasm-nonlocal-label-rexexp) 1)
     (nil ,(concat (nasm--opt '("%define" "%macro"))
                   "\\s-+\\([a-zA-Z0-9_$#@~.?]+\\)") 2))
-  "Expressions for `imenu-generic-expression'.")
+  "Expressions for `imenu-generic-expression`.")
 
 (defconst nasm-full-instruction-regexp
   (eval-when-compile
     (let ((pfx (nasm--opt nasm-prefix))
           (ins (nasm--opt nasm-instructions)))
       (concat "^\\(" pfx "\\s-+\\)?" ins "$")))
-  "Regexp for `nasm-mode' matching a valid full NASM instruction field.
+  "Regexp for `nasm-mode` matching a valid full NASM instruction field.
 This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
 
 (defconst nasm-font-lock-keywords
@@ -385,7 +385,7 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
     (,(concat "^\\s-*" nasm-local-label-regexp) (1 'nasm-local-labels))
     (,nasm-constant-regexp . 'nasm-constant)
     (,(nasm--opt nasm-directives) . 'nasm-directives))
-  "Keywords for `nasm-mode'.")
+  "Keywords for `nasm-mode`.")
 
 (defconst nasm-mode-syntax-table
   (with-syntax-table (copy-syntax-table)
@@ -401,7 +401,7 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
     (modify-syntax-entry ?\' "\"")
     (modify-syntax-entry ?\` "\"")
     (syntax-table))
-  "Syntax table for `nasm-mode'.")
+  "Syntax table for `nasm-mode`.")
 
 (defvar nasm-mode-map
   (let ((map (make-sparse-keymap)))
@@ -409,7 +409,7 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
       (define-key map (kbd ":") #'nasm-colon)
       (define-key map (kbd ";") #'nasm-comment)
       (define-key map [remap join-line] #'nasm-join-line)))
-  "Key bindings for `nasm-mode'.")
+  "Key bindings for `nasm-mode`.")
 
 (defun nasm-colon ()
   "Insert a colon and convert the current line into a label."
@@ -419,7 +419,7 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
 
 (defun nasm-indent-line ()
   "Indent current line (or insert a tab) as NASM assembly code.
-This will be called by `indent-for-tab-command' when TAB is
+This will be called by `indent-for-tab-command` when TAB is
 pressed. We indent the entire line as appropriate whenever POINT
 is not immediately after a mnemonic; otherwise, we insert a tab."
   (interactive)
@@ -504,7 +504,7 @@ code and the comment gutter.
   comment out the line.
 
 With a prefix arg, kill the comment on the current line with
-`comment-kill'."
+`comment-kill`."
   (interactive "p")
   (if (not (eql arg 1))
       (comment-kill nil)
@@ -529,7 +529,7 @@ With a prefix arg, kill the comment on the current line with
      ((insert ";")))))
 
 (defun nasm-join-line (join-following-p)
-  "Like `join-line', but use a tab when joining with a label."
+  "Like `join-line`, but use a tab when joining with a label."
   (interactive "*P")
   (join-line join-following-p)
   (if (looking-back nasm-label-regexp (line-beginning-position))
