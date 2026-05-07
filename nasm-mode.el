@@ -419,7 +419,7 @@ This includes prefixes or modifiers (eg \"mov\", \"rep mov\", etc match)")
 
 (defun nasm-indent-line ()
   "Indent current line (or insert a tab) as NASM assembly code.
-This will be called by `indent-for-tab-command` when TAB is
+This will be called by `indent-for-tab-command' when TAB is
 pressed.  We indent the entire line as appropriate whenever POINT
 is not immediately after a mnemonic; otherwise, we insert a tab."
   (interactive)
@@ -504,7 +504,7 @@ code and the comment gutter.
   comment out the line.
 
 With a prefix ARG, kill the comment on the current line with
-`comment-kill`."
+`comment-kill'."
   (interactive "p")
   (if (not (eql arg 1))
       (comment-kill nil)
